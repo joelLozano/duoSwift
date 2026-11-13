@@ -21,7 +21,7 @@ export default class ErrorBoundary extends Component {
         <p className="muted small">{String(this.state.error?.message || this.state.error)}</p>
         <div className="row-actions" style={{ justifyContent: 'center' }}>
           <button className="btn btn-secondary" onClick={() => this.setState({ error: null })}>Reintentar</button>
-          <a className="btn btn-ghost" href="/">Ir al inicio</a>
+          <a className="btn btn-ghost" href={import.meta.env.BASE_URL}>Ir al inicio</a>
         </div>
       </div>
     )

@@ -18,7 +18,7 @@ import Courses from './pages/Courses.jsx'
 function Splash() {
   return (
     <div className="splash">
-      <img src="/favicon.svg" alt="" width="72" height="72" className="pulse" />
+      <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width="72" height="72" className="pulse" />
       <p>Cargando…</p>
     </div>
   )

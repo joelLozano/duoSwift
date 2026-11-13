@@ -31,6 +31,16 @@ cp .env.example .env.local
 
 El progreso se guarda en el documento `users/{uid}` (campo `progress`), con caché local para funcionar offline. Para producción en Firebase Hosting: `npm run build` y `firebase deploy` (agrega tu dominio en *Authentication → Settings → Authorized domains*).
 
+## Publicar en GitHub Pages
+
+El workflow `.github/workflows/deploy.yml` compila y publica la app en cada push a `main`:
+
+1. En GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions** (solo la primera vez).
+2. Haz push a `main` (o ejecuta el workflow a mano desde la pestaña **Actions**).
+3. La app queda en `https://<usuario>.github.io/duoSwift/`.
+
+El workflow define `BASE_PATH=/<repo>/` para que Vite genere las rutas correctas y copia `index.html` como `404.html` para que las rutas de React Router funcionen al recargar. Para usar Firebase en producción, añade los valores de `.env.example` como secretos del repositorio (**Settings → Secrets and variables → Actions**) y autoriza el dominio `<usuario>.github.io` en Firebase Authentication; sin ellos la app funciona en modo local.
+
 ## Funcionalidades
 
 | Sección | Qué hace |

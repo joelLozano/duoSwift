@@ -86,7 +86,7 @@ export default function Layout() {
     <div className="app-shell">
       <aside className="sidebar">
         <Link to="/" className="brand">
-          <img src="/favicon.svg" alt="" width="36" height="36" />
+          <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width="36" height="36" />
           <span>duo<b>swift</b></span>
         </Link>
         {hasCourse && <CourseSwitcher />}
@@ -114,7 +114,7 @@ export default function Layout() {
           {hasCourse ? (
             <div className="topbar-switcher"><CourseSwitcher compact /></div>
           ) : (
-            <Link to="/" className="brand brand-sm"><img src="/favicon.svg" alt="" width="30" height="30" /></Link>
+            <Link to="/" className="brand brand-sm"><img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width="30" height="30" /></Link>
           )}
           <div className="stats">
             <span className={`stat ${streak ? 'fire' : 'off'}`} title="Racha de días">🔥 {streak}</span>

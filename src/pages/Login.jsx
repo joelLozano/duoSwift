@@ -43,7 +43,7 @@ export default function Login() {
     <div className="auth">
       <section className="auth-hero">
         <div className="hero-bird">
-          <img src="/favicon.svg" alt="" width="96" height="96" />
+          <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width="96" height="96" />
         </div>
         <h1>duo<b>swift</b></h1>
         <p>Aprende Swift, IA para iOS, Clean Architecture y algoritmos con lecciones cortas, repetición espaciada, exámenes y preguntas de entrevista.</p>
