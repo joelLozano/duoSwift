@@ -1,0 +1,100 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agentes hook session-start",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agentes hook prompt",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agentes hook stop",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "mcp__agentes",
+      "Bash(agentes context:*)",
+      "Bash(agentes scan:*)",
+      "Bash(agentes index:*)",
+      "Bash(agentes triage:*)",
+      "Bash(agentes doctor:*)",
+      "Bash(agentes audit:*)",
+      "Bash(agentes bench:*)",
+      "Bash(agentes questions:*)",
+      "Bash(agentes ds show:*)",
+      "Bash(agentes ds lookup:*)",
+      "Bash(agentes ds check:*)",
+      "Bash(agentes ds map:*)",
+      "Bash(agentes ds index:*)",
+      "Bash(agentes design list:*)",
+      "Bash(agentes design ref:*)",
+      "Bash(agentes design compare:*)",
+      "Bash(agentes design shot:*)",
+      "Bash(agentes requisitos --check:*)",
+      "Bash(agentes memory search:*)",
+      "Bash(agentes memory list:*)",
+      "Bash(agentes memory stats:*)",
+      "Bash(agentes task list:*)",
+      "Bash(agentes task show:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.local)",
+      "Read(./.env.development)",
+      "Read(./.env.production)",
+      "Read(./.env.staging)",
+      "Read(./.env.test)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Read(./**/*.p8)",
+      "Read(./**/*.p12)",
+      "Read(./**/*.pfx)",
+      "Read(./**/*.jks)",
+      "Read(./**/*.keystore)",
+      "Read(./**/*.mobileprovision)",
+      "Read(./**/local.properties)",
+      "Read(./**/keystore.properties)",
+      "Read(./**/*.tfvars)",
+      "Read(./**/credentials.json)",
+      "Read(./**/service-account*.json)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/agentes/**)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout -b:*)",
+      "Bash(git checkout -B:*)",
+      "Bash(git switch -c:*)",
+      "Bash(git switch -C:*)",
+      "Bash(git switch --create:*)",
+      "Bash(git switch --force-create:*)",
+      "Bash(git worktree add:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)"
+    ]
+  }
+}

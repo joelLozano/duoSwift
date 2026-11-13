@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "agentes": {
+      "command": "agentes",
+      "args": [
+        "mcp"
+      ],
+      "disabled": false
+    }
+  }
+}

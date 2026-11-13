@@ -1,0 +1,26 @@
+# agentes:start (generado; edita kiro.kiroignore en team.local.yaml)
+node_modules/
+dist/
+build/
+out/
+.next/
+.nuxt/
+.turbo/
+.cache/
+coverage/
+vendor/
+target/
+*.min.js
+*.map
+*.lock
+package-lock.json
+pnpm-lock.yaml
+.agentes/agentes.db*
+.agentes/vectors/
+.agentes/backup/
+.agentes/design/compare/
+.env
+.env.*
+!.env.example
+!.env.sample
+# agentes:end
