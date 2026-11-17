@@ -1,5 +1,6 @@
 // Contenido basado en "The Swift Programming Language" (Swift 6.4) — docs.swift.org
 import { tspl, apple } from './sources.js'
+import { functionsReading, closuresReading, enumsReading, typesReading, propertiesReading } from './readings/swift-base-2.js'
 
 export const unitsB = [
   /* ============================ 6. FUNCIONES ============================ */
@@ -10,33 +11,7 @@ export const unitsB = [
     icon: '⚙️',
     color: '#2B70C9',
     sources: [tspl('functions', 'Functions')],
-    reading: [
-      {
-        h: 'Definir y llamar funciones',
-        p: 'Una función se define con `func`, sus parámetros con tipo y el tipo de retorno tras `->`. Si el cuerpo es una sola expresión, el `return` es implícito.',
-        code: 'func greet(person: String) -> String {\n    let greeting = "Hello, " + person + "!"\n    return greeting\n}\nprint(greet(person: "Anna"))\n\nfunc greetAgain(person: String) -> String {\n    "Hello again, " + person + "!"\n}',
-      },
-      {
-        h: 'Etiquetas de argumento',
-        p: 'Cada parámetro tiene una etiqueta de argumento (se usa al llamar) y un nombre de parámetro (se usa dentro). Por defecto son iguales. Puedes escribir una etiqueta distinta antes del nombre, o `_` para omitirla.',
-        code: 'func greet(person: String, from hometown: String) -> String {\n    "Hello \\(person)! Glad you could visit from \\(hometown)."\n}\ngreet(person: "Bill", from: "Cupertino")\n\nfunc square(_ x: Int) -> Int { x * x }\nsquare(4)',
-      },
-      {
-        h: 'Valores por defecto y variádicos',
-        p: 'Un parámetro puede tener un valor por defecto, así puedes omitirlo al llamar. Un parámetro variádico (`Double...`) acepta cero o más valores y dentro de la función se usa como un array.',
-        code: 'func someFunction(parameterWithDefault: Int = 12) { }\nsomeFunction() // usa 12\n\nfunc arithmeticMean(_ numbers: Double...) -> Double {\n    numbers.reduce(0, +) / Double(numbers.count)\n}\narithmeticMean(1, 2, 3, 4, 5) // 3.0',
-      },
-      {
-        h: 'Parámetros inout y retornos múltiples',
-        p: 'Los parámetros son constantes por defecto. Con `inout` una función puede modificar la variable que recibe; al llamarla se antepone `&`. Para devolver varios valores se usa una tupla, y puede ser opcional.',
-        code: 'func swapTwoInts(_ a: inout Int, _ b: inout Int) {\n    let temp = a\n    a = b\n    b = temp\n}\nvar x = 3, y = 107\nswapTwoInts(&x, &y)\n\nfunc minMax(array: [Int]) -> (min: Int, max: Int)? {\n    guard let first = array.first else { return nil }\n    return (array.min()!, array.max()!)\n}',
-      },
-      {
-        h: 'Tipos función',
-        p: 'Las funciones tienen un tipo, por ejemplo `(Int, Int) -> Int`. Puedes guardarlas en variables, pasarlas como parámetros, devolverlas desde otras funciones y anidarlas.',
-        code: 'func addTwoInts(_ a: Int, _ b: Int) -> Int { a + b }\nvar mathFunction: (Int, Int) -> Int = addTwoInts\nprint(mathFunction(2, 3)) // 5',
-      },
-    ],
+    ...functionsReading,
     lessons: [
       {
         title: 'Definir funciones',
@@ -71,33 +46,7 @@ export const unitsB = [
     icon: '🎯',
     color: '#00CD9C',
     sources: [tspl('closures', 'Closures')],
-    reading: [
-      {
-        h: 'Expresiones closure',
-        p: 'Los closures son bloques de funcionalidad que puedes pasar y usar en tu código. Las funciones globales y anidadas son casos especiales de closures. Una expresión closure se escribe `{ (parámetros) -> Tipo in sentencias }`.',
-        code: 'let names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]\nvar reversedNames = names.sorted(by: { (s1: String, s2: String) -> Bool in\n    return s1 > s2\n})',
-      },
-      {
-        h: 'Simplificaciones',
-        p: 'Swift infiere los tipos del contexto, permite el retorno implícito en closures de una sola expresión, ofrece nombres abreviados (`$0`, `$1`) e incluso permite pasar un operador como `>`.',
-        code: 'reversedNames = names.sorted(by: { s1, s2 in s1 > s2 })\nreversedNames = names.sorted(by: { $0 > $1 })\nreversedNames = names.sorted(by: >)',
-      },
-      {
-        h: 'Closures finales (trailing closures)',
-        p: 'Si el último argumento es un closure, puedes escribirlo después de los paréntesis. Si es el único argumento, incluso puedes omitir los paréntesis.',
-        code: 'reversedNames = names.sorted { $0 > $1 }\n\nlet strings = [16, 58, 510].map { number -> String in\n    String(number)\n}',
-      },
-      {
-        h: 'Captura de valores',
-        p: 'Un closure puede capturar constantes y variables de su contexto y seguir usándolas aunque ese ámbito ya no exista. Los closures son tipos de referencia: si asignas uno a dos variables, ambas apuntan al mismo closure.',
-        code: 'func makeIncrementer(forIncrement amount: Int) -> () -> Int {\n    var runningTotal = 0\n    func incrementer() -> Int {\n        runningTotal += amount\n        return runningTotal\n    }\n    return incrementer\n}\nlet incrementByTen = makeIncrementer(forIncrement: 10)\nincrementByTen() // 10\nincrementByTen() // 20',
-      },
-      {
-        h: '@escaping y @autoclosure',
-        p: 'Un closure "escapa" si se ejecuta después de que la función retorna, por ejemplo al guardarlo para un callback. Se marca con `@escaping`, y dentro de una clase debes referirte a `self` de forma explícita. `@autoclosure` envuelve automáticamente una expresión en un closure y retrasa su evaluación.',
-        code: 'var completionHandlers: [() -> Void] = []\nfunc someFunctionWithEscapingClosure(completionHandler: @escaping () -> Void) {\n    completionHandlers.append(completionHandler)\n}',
-      },
-    ],
+    ...closuresReading,
     lessons: [
       {
         title: 'Sintaxis',
@@ -131,33 +80,7 @@ export const unitsB = [
     icon: '🧭',
     color: '#FFC800',
     sources: [tspl('enumerations', 'Enumerations')],
-    reading: [
-      {
-        h: 'Sintaxis',
-        p: 'Una enumeración define un tipo común para un grupo de valores relacionados. Los casos no tienen un valor entero por defecto como en C: son valores por sí mismos. Cuando el tipo es conocido, puedes escribir solo `.caso`.',
-        code: 'enum CompassPoint {\n    case north, south, east, west\n}\nvar directionToHead = CompassPoint.west\ndirectionToHead = .east',
-      },
-      {
-        h: 'switch con enums',
-        p: 'Un `switch` sobre un enum debe cubrir todos los casos; así el compilador te avisa si olvidas alguno.',
-        code: 'switch directionToHead {\ncase .north: print("Hacia el norte")\ncase .south: print("Cuidado con los pingüinos")\ncase .east:  print("Donde sale el sol")\ncase .west:  print("Donde el cielo es azul")\n}',
-      },
-      {
-        h: 'CaseIterable',
-        p: 'Si un enum adopta `CaseIterable`, Swift genera la colección `allCases` con todos sus casos.',
-        code: 'enum Beverage: CaseIterable { case coffee, tea, juice }\nprint(Beverage.allCases.count) // 3',
-      },
-      {
-        h: 'Valores asociados',
-        p: 'Cada caso puede guardar valores de otros tipos, distintos para cada instancia. Se extraen en un `switch` con `let`.',
-        code: 'enum Barcode {\n    case upc(Int, Int, Int, Int)\n    case qrCode(String)\n}\nvar productBarcode = Barcode.upc(8, 85909, 51226, 3)\nproductBarcode = .qrCode("ABCDEFGHIJKLMNOP")\n\nswitch productBarcode {\ncase let .upc(a, b, c, d): print("UPC: \\(a), \\(b), \\(c), \\(d)")\ncase let .qrCode(code):    print("QR: \\(code)")\n}',
-      },
-      {
-        h: 'Valores raw y enums recursivos',
-        p: 'Los valores raw son valores por defecto del mismo tipo para todos los casos. Con enteros o strings se asignan de forma implícita. `init?(rawValue:)` es un inicializador que puede fallar y devuelve opcional. Un enum recursivo usa `indirect`.',
-        code: 'enum Planet: Int {\n    case mercury = 1, venus, earth, mars\n}\nPlanet.earth.rawValue          // 3\nlet p = Planet(rawValue: 7)    // nil\n\nenum CompassPoint: String { case north, south }\nCompassPoint.south.rawValue    // "south"\n\nindirect enum ArithmeticExpression {\n    case number(Int)\n    case addition(ArithmeticExpression, ArithmeticExpression)\n}',
-      },
-    ],
+    ...enumsReading,
     lessons: [
       {
         title: 'Casos y switch',
@@ -191,32 +114,7 @@ export const unitsB = [
     icon: '🏗️',
     color: '#FF86D0',
     sources: [tspl('classesandstructures', 'Structures and Classes'), tspl('inheritance', 'Inheritance'), apple('swift/choosing-between-structures-and-classes', 'Choosing Between Structures and Classes')],
-    reading: [
-      {
-        h: 'Lo que comparten',
-        p: 'Estructuras y clases pueden definir propiedades, métodos, subíndices e inicializadores, extenderse y conformar protocolos. Solo las clases tienen herencia, conversión de tipos en tiempo de ejecución, desinicializadores y conteo de referencias.',
-        code: 'struct Resolution {\n    var width = 0\n    var height = 0\n}\nclass VideoMode {\n    var resolution = Resolution()\n    var interlaced = false\n    var frameRate = 0.0\n    var name: String?\n}',
-      },
-      {
-        h: 'Las estructuras son tipos de valor',
-        p: 'Las estructuras y los enums se copian al asignarse o pasarse a una función. Todos los tipos básicos (Int, String, Array, Dictionary…) son estructuras. Además, las structs reciben un inicializador de miembros (memberwise) automático.',
-        code: 'let hd = Resolution(width: 1920, height: 1080)\nvar cinema = hd\ncinema.width = 2048\nprint(hd.width)     // 1920 — el original no cambia',
-      },
-      {
-        h: 'Las clases son tipos de referencia',
-        p: 'Asignar una instancia de clase no la copia: ambas variables hacen referencia a la misma instancia. Por eso puedes modificar propiedades `var` aunque la referencia sea `let`. Usa `===` para saber si dos referencias apuntan a la misma instancia.',
-        code: 'let tenEighty = VideoMode()\ntenEighty.frameRate = 25.0\nlet alsoTenEighty = tenEighty\nalsoTenEighty.frameRate = 30.0\nprint(tenEighty.frameRate)       // 30.0\nprint(tenEighty === alsoTenEighty) // true',
-      },
-      {
-        h: 'Herencia',
-        p: 'Una clase puede heredar de otra y sobrescribir métodos y propiedades con `override`. Con `super` accedes a la implementación de la superclase. `final` impide que se sobrescriba o herede.',
-        code: 'class Vehicle {\n    var currentSpeed = 0.0\n    func makeNoise() { }\n}\nclass Train: Vehicle {\n    override func makeNoise() { print("Choo Choo") }\n}\nfinal class Bicycle: Vehicle { var hasBasket = false }',
-      },
-      {
-        h: '¿Cuál elegir?',
-        p: 'Apple recomienda usar estructuras por defecto, y clases cuando necesites interoperar con Objective-C, controlar la identidad de una instancia o compartir estado mutable.',
-      },
-    ],
+    ...typesReading,
     lessons: [
       {
         title: 'Valor vs referencia',
@@ -250,38 +148,7 @@ export const unitsB = [
     icon: '🔧',
     color: '#8549BA',
     sources: [tspl('properties', 'Properties'), tspl('methods', 'Methods'), tspl('initialization', 'Initialization')],
-    reading: [
-      {
-        h: 'Propiedades almacenadas y lazy',
-        p: 'Las propiedades almacenadas guardan un valor. Una propiedad `lazy var` no calcula su valor inicial hasta que se usa por primera vez; debe ser `var`.',
-        code: 'class DataManager {\n    lazy var importer = DataImporter()\n    var data: [String] = []\n}',
-      },
-      {
-        h: 'Propiedades calculadas',
-        p: 'No guardan un valor: proporcionan un `get` y, opcionalmente, un `set`. Si solo tienen getter son de solo lectura y puedes omitir la palabra `get`.',
-        code: 'struct Rect {\n    var width = 0.0, height = 0.0\n    var area: Double { width * height }\n}',
-      },
-      {
-        h: 'Observadores',
-        p: '`willSet` se llama justo antes de guardar un nuevo valor (`newValue`) y `didSet` justo después (`oldValue`).',
-        code: 'class StepCounter {\n    var totalSteps: Int = 0 {\n        willSet { print("Valor nuevo: \\(newValue)") }\n        didSet {\n            if totalSteps > oldValue { print("+\\(totalSteps - oldValue) pasos") }\n        }\n    }\n}',
-      },
-      {
-        h: 'Wrappers y propiedades de tipo',
-        p: 'Un property wrapper (`@propertyWrapper`) encapsula la lógica de cómo se guarda una propiedad. Las propiedades de tipo (`static`) pertenecen al tipo, no a cada instancia.',
-        code: '@propertyWrapper\nstruct TwelveOrLess {\n    private var number = 0\n    var wrappedValue: Int {\n        get { number }\n        set { number = min(newValue, 12) }\n    }\n}\nstruct SmallRectangle {\n    @TwelveOrLess var height: Int\n}\nstruct AudioChannel { static let maxLevel = 10 }',
-      },
-      {
-        h: 'Métodos mutating',
-        p: 'Los métodos de instancia de structs y enums no pueden modificar propiedades a menos que se marquen con `mutating`. No puedes llamar a un método mutating sobre una constante `let`.',
-        code: 'struct Point {\n    var x = 0.0, y = 0.0\n    mutating func moveBy(x deltaX: Double, y deltaY: Double) {\n        x += deltaX\n        y += deltaY\n    }\n}',
-      },
-      {
-        h: 'Inicialización',
-        p: 'Toda propiedad almacenada debe tener un valor cuando termina la inicialización. En las clases hay inicializadores designados y de conveniencia (`convenience init`, que deben llamar a otro de la misma clase). `init?` define un inicializador que puede fallar; `required` obliga a las subclases a implementarlo.',
-        code: 'struct Animal {\n    let species: String\n    init?(species: String) {\n        if species.isEmpty { return nil }\n        self.species = species\n    }\n}\nclass Food {\n    var name: String\n    init(name: String) { self.name = name }\n    convenience init() { self.init(name: "[Unnamed]") }\n}',
-      },
-    ],
+    ...propertiesReading,
     lessons: [
       {
         title: 'Propiedades',

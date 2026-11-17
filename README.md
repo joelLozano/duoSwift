@@ -1,6 +1,6 @@
 # DuoSwift 🐦
 
-Web app estilo Duolingo con cinco cursos, **Swift**, **Kotlin**, **IA para iOS** (de cero a avanzado), **Clean Architecture** y **Algoritmos y estructuras de datos**: lecciones cortas, repetición espaciada, exámenes, lecturas y preguntas de entrevista. Puedes inscribirte en varios cursos y cambiar entre ellos. Hecha con **React + Vite**, totalmente responsive (escritorio, tablet y móvil).
+Web app estilo Duolingo con seis cursos, **Swift**, **SwiftUI**, **Kotlin**, **IA para iOS** (de cero a avanzado), **Clean Architecture** y **Algoritmos y estructuras de datos**: lecciones cortas, repetición espaciada, exámenes, lecturas y preguntas de entrevista. Puedes inscribirte en varios cursos y cambiar entre ellos. Hecha con **React + Vite**, totalmente responsive (escritorio, tablet y móvil).
 
 ## Inicio rápido
 
@@ -59,11 +59,12 @@ El workflow define `BASE_PATH=/<repo>/` para que Vite genere las rutas correctas
 
 | Curso | Unidades | Preguntas | Entrevista |
 |---|---|---|---|
-| 🐦 Swift | 18 (40 lecciones) | 238 | 40 |
+| 🐦 Swift | 23 en 3 módulos (50 lecciones) | 298 | 46 |
 | 🤖 IA para iOS | 14 en 5 módulos (28 lecciones) | 160 | 25 |
 | 🏛️ Clean Architecture | 12 en 4 módulos (24 lecciones) | 125 | 19 |
 | 🧮 Algoritmos y estructuras | 12 en 3 módulos (24 lecciones) | 124 | 18 |
 | 🟣 Kotlin | 14 en 3 módulos (28 lecciones) | 169 | 28 |
+| 🎨 SwiftUI | 15 en 4 módulos (30 lecciones) | 180 | 20 |
 
 ### 🧮 Algoritmos y estructuras de datos
 
@@ -98,6 +99,17 @@ Sigue el temario de `ia_content_ios.md`:
 
 Fuentes: [Google Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course), [Apple Developer Documentation](https://developer.apple.com/documentation/) (Core ML, Core AI, Create ML, Vision, Natural Language, Speech, Foundation Models, Evaluations), sesiones de WWDC25/WWDC26, [Core ML Tools](https://apple.github.io/coremltools/docs-guides/), [Hugging Face LLM Course](https://huggingface.co/learn/llm-course), guías de prompting de Anthropic, OpenAI y Google, [App Review Guidelines](https://developer.apple.com/app-store/review/guidelines/), [Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/generative-ai) y [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework). Cada lectura enlaza sus fuentes concretas.
 
+### 🎨 SwiftUI
+
+Curso completo de SwiftUI, de lo básico a lo avanzado, con lecturas ilustradas: vistas previas tipo iPhone de lo que dibuja cada código y diagramas (flujo de datos, ciclo de vida, jerarquía de vistas).
+
+1. **Fundamentos**: anatomía de una app (View, body, App, Scene, previews), layout y stacks (cómo se negocian los tamaños, frame, grids, ViewThatFits), modificadores y estilo (orden, texto, SF Symbols, ViewModifier, Liquid Glass) y controles y formularios.
+2. **Datos y estado**: `@State` y `@Binding`, modelos con `@Observable` y `@Bindable` (y el modelo clásico `ObservableObject`), environment (valores del sistema, `dismiss`, `@Entry`, inyección de modelos) y ciclo de vida e identidad (`onAppear`, `.task`, `onChange`, `scenePhase`, `.id`).
+3. **Listas y navegación**: `List`, `ForEach`, acciones al deslizar y búsqueda; `NavigationStack` con rutas, `TabView` y `NavigationSplitView`; hojas, alertas, diálogos y toolbar.
+4. **SwiftUI avanzado**: animaciones, transiciones, `matchedGeometryEffect` y gestos; formas, Canvas, `GeometryReader` y el protocolo `Layout`; arquitectura con estados de carga, modelos observables y SwiftData; rendimiento, accesibilidad e integración con UIKit.
+
+Fuentes: [documentación de SwiftUI](https://developer.apple.com/documentation/swiftui), [tutoriales de SwiftUI](https://developer.apple.com/tutorials/swiftui), sesiones de WWDC (de *Data Essentials in SwiftUI* a *What's new in SwiftUI* de WWDC26) y [SwiftData](https://developer.apple.com/documentation/swiftdata). La entrevista tiene las categorías Fundamentos, Estado, Ciclo de vida, Navegación y Avanzado.
+
 ### 🟣 Kotlin
 
 Curso paralelo al de Swift, para el desarrollo Android:
@@ -119,7 +131,9 @@ Unidades de Swift: Fundamentos · Opcionales · Operadores y Strings · Coleccio
 
 Módulo **Testing en Swift** (4 unidades): Fundamentos de testing (pirámide, AAA, FIRST, TDD, cobertura) · Pruebas unitarias (Swift Testing: `@Test`, `#expect`, `#require`, parametrizadas, traits, `confirmation`; y XCTest) · Dobles e integración (stub, spy, mock, fake, inyección de dependencias, `URLProtocol`, SwiftData en memoria) · UI, rendimiento y CI (XCUIAutomation, `accessibilityIdentifier`, `measure(metrics:)`, test plans, `xcodebuild test`). Fuentes: [Swift Testing](https://developer.apple.com/documentation/testing), [XCTest](https://developer.apple.com/documentation/xctest), [XCUIAutomation](https://developer.apple.com/documentation/xcuiautomation), WWDC24 *Meet Swift Testing*, WWDC25 *Record, replay, and review* y Martin Fowler (Test Double, The Practical Test Pyramid). La entrevista de Swift incluye la categoría **Testing**.
 
-El contenido vive en `src/data/` como módulos JS (sin depender de la red): Swift en `units-*.js` e `interview.js`; IA en `ai/module1-5.js` e `ai/interview.js`; Clean Architecture en `clean/`; Algoritmos en `algo/`; Kotlin en `kotlin/`; el catálogo de cursos en `data/index.js`. Para agregar un curso nuevo, añade una entrada a `RAW_COURSES` con ids de unidad únicos. Para agregar una unidad, copia la estructura de cualquier unidad existente; los ids de lecciones y preguntas se generan por posición (`<unidad>-L1-Q1`), así que **agrega preguntas al final** de cada lección para no alterar el historial de repaso.
+Módulo **Swift avanzado** (5 unidades): Genéricos avanzados (tipos asociados primarios, `some` frente a `any`, conformidades condicionales, type erasure) · Memoria y rendimiento (ciclos en closures, copy-on-write con `isKnownUniquelyReferenced`, tipos `~Copyable`, `InlineArray` y `Span` de Swift 6.2, despacho) · Concurrencia avanzada (reentrada en actores, aislamiento y `Sendable`, task groups, `AsyncStream`, cancelación, concurrencia accesible de Swift 6.2 con `@concurrent`) · Wrappers, builders y macros (property wrappers, result builders, key paths, `@dynamicMemberLookup`, macros) · Diseño de APIs (despacho en extensiones de protocolo, typed throws, niveles de acceso, API Design Guidelines, `@inlinable`). Fuentes: TSPL, documentación de Apple, sesiones de WWDC, [Swift 6.2 Released](https://www.swift.org/blog/swift-6.2-released/), [API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/) y Swift Evolution (SE-0413). La entrevista añade la categoría **Avanzado**.
+
+El contenido vive en `src/data/` como módulos JS (sin depender de la red): Swift en `units-*.js` e `interview.js`; IA en `ai/module1-5.js` e `ai/interview.js`; Clean Architecture en `clean/`; Algoritmos en `algo/`; Kotlin en `kotlin/`; SwiftUI en `swiftui/`; el catálogo de cursos en `data/index.js`. Para agregar un curso nuevo, añade una entrada a `RAW_COURSES` con ids de unidad únicos. Para agregar una unidad, copia la estructura de cualquier unidad existente; los ids de lecciones y preguntas se generan por posición (`<unidad>-L1-Q1`), así que **agrega preguntas al final** de cada lección para no alterar el historial de repaso.
 
 ```js
 { t: 'mc',    q: 'Pregunta', code: 'opcional', opts: ['A', 'B'], a: 0, ex: 'Explicación' }

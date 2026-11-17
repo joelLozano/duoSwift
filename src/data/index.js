@@ -2,6 +2,7 @@ import { unitsA } from './units-a.js'
 import { unitsB } from './units-b.js'
 import { unitsC } from './units-c.js'
 import { unitsD } from './units-d.js'
+import { unitsE } from './units-e.js'
 import { interview as swiftInterview, INTERVIEW_CATEGORIES as SWIFT_CATEGORIES } from './interview.js'
 import { module1 } from './ai/module1.js'
 import { module2 } from './ai/module2.js'
@@ -16,6 +17,11 @@ import { algoModule1, algoModule2 } from './algo/module1.js'
 import { algoModule3 } from './algo/module2.js'
 import { algoInterview, ALGO_INTERVIEW_CATEGORIES } from './algo/interview.js'
 import { kotlinModule1 } from './kotlin/module1.js'
+import { swiftuiModule1 } from './swiftui/module1.js'
+import { swiftuiModule2 } from './swiftui/module2.js'
+import { swiftuiModule3 } from './swiftui/module3.js'
+import { swiftuiModule4 } from './swiftui/module4.js'
+import { swiftuiInterview, SWIFTUI_INTERVIEW_CATEGORIES } from './swiftui/interview.js'
 import { kotlinModule2 } from './kotlin/module2.js'
 import { kotlinModule3 } from './kotlin/module3.js'
 import { kotlinInterview, KOTLIN_INTERVIEW_CATEGORIES } from './kotlin/interview.js'
@@ -30,7 +36,7 @@ const RAW_COURSES = [
     id: 'swift',
     title: 'Swift',
     tagline: 'El lenguaje de iOS desde cero',
-    description: 'Fundamentos del lenguaje, opcionales, colecciones, funciones, closures, tipos, protocolos, genéricos, concurrencia, SwiftUI y testing (unitarias, integración, UI y rendimiento).',
+    description: 'Fundamentos del lenguaje, opcionales, colecciones, funciones, closures, tipos, protocolos, genéricos, concurrencia, SwiftUI, testing (unitarias, integración, UI y rendimiento) y Swift avanzado (genéricos, memoria, concurrencia, macros y diseño de APIs).',
     icon: '🐦',
     color: '#F05138',
     level: 'Principiante → Intermedio',
@@ -38,6 +44,7 @@ const RAW_COURSES = [
     units: [
       ...[...unitsA, ...unitsB, ...unitsC].map((u) => ({ module: 'Lenguaje y SwiftUI', ...u })),
       ...unitsD,
+      ...unitsE,
     ],
     interview: swiftInterview,
     interviewCategories: SWIFT_CATEGORIES,
@@ -98,6 +105,20 @@ const RAW_COURSES = [
     interview: kotlinInterview,
     interviewCategories: KOTLIN_INTERVIEW_CATEGORIES,
     finalExamId: 'kotlin-final',
+  },
+  {
+    id: 'swiftui',
+    title: 'SwiftUI',
+    tagline: 'Interfaces declarativas para todas las plataformas de Apple',
+    description: 'De lo básico a lo avanzado: vistas, layout, modificadores, controles, estado, @Observable, environment, ciclo de vida, listas, navegación, presentaciones, animaciones, gestos, gráficos, arquitectura con SwiftData, rendimiento, accesibilidad e integración con UIKit.',
+    icon: '🎨',
+    color: '#0A84FF',
+    level: 'Principiante → Avanzado',
+    sourcesNote: 'Documentación de SwiftUI, tutoriales y sesiones de WWDC de Apple',
+    units: [...swiftuiModule1, ...swiftuiModule2, ...swiftuiModule3, ...swiftuiModule4],
+    interview: swiftuiInterview,
+    interviewCategories: SWIFTUI_INTERVIEW_CATEGORIES,
+    finalExamId: 'swiftui-final',
   },
 ]
 

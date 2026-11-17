@@ -60,10 +60,11 @@ export function CodeBlock({ code, blank }) {
 
 // Convierte `código` en línea y **negritas** en elementos
 export function Rich({ text }) {
-  const parts = String(text).split(/(`[^`]+`|\*\*[^*]+\*\*)/g)
+  const parts = String(text).split(/(`[^`]+`|\*\*[^*]+\*\*|\*[^*\s][^*]*[^*\s]\*)/g)
   return parts.map((p, i) => {
     if (p.startsWith('`') && p.endsWith('`') && p.length > 1) return <code key={i} className="inline-code">{p.slice(1, -1)}</code>
     if (p.startsWith('**')) return <strong key={i}>{p.slice(2, -2)}</strong>
+    if (p.startsWith('*') && p.endsWith('*') && p.length > 2) return <em key={i}>{p.slice(1, -1)}</em>
     return <Fragment key={i}>{p}</Fragment>
   })
 }

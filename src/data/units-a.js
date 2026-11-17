@@ -1,6 +1,7 @@
 // Contenido basado en "The Swift Programming Language" (Swift 6.4), documentación oficial:
 // https://docs.swift.org/swift-book/  ·  Fuente: github.com/swiftlang/swift-book (Apache 2.0)
 import { tspl } from './sources.js'
+import { basicsReading, optionalsReading, stringsReading, collectionsReading, controlFlowReading } from './readings/swift-base-1.js'
 
 export const unitsA = [
   /* ============================ 1. FUNDAMENTOS ============================ */
@@ -11,33 +12,7 @@ export const unitsA = [
     icon: '🧱',
     color: '#58CC02',
     sources: [tspl('thebasics', 'The Basics'), tspl('guidedtour', 'A Swift Tour')],
-    reading: [
-      {
-        h: 'Constantes y variables',
-        p: 'Una constante se declara con `let` y su valor no puede cambiar una vez asignado. Una variable se declara con `var` y puede cambiar después. La guía oficial recomienda usar `let` siempre que el valor no vaya a cambiar.',
-        code: 'let maximumNumberOfLoginAttempts = 10\nvar currentLoginAttempt = 0\ncurrentLoginAttempt += 1',
-      },
-      {
-        h: 'Anotaciones de tipo e inferencia',
-        p: 'Puedes indicar el tipo con dos puntos: `var welcomeMessage: String`. Normalmente no hace falta: Swift infiere el tipo a partir del valor inicial. Un literal entero se infiere como `Int` y uno decimal como `Double`.',
-        code: 'var welcomeMessage: String\nwelcomeMessage = "Hola"\n\nlet meaningOfLife = 42      // Int\nlet pi = 3.14159            // Double\nlet anotherPi = 3 + 0.14159 // Double',
-      },
-      {
-        h: 'Seguridad de tipos',
-        p: 'Swift es un lenguaje con tipado seguro: no mezcla tipos implícitamente. Para sumar un `Int` y un `Double` debes convertir explícitamente uno de ellos, por ejemplo con `Double(three)`.',
-        code: 'let three = 3\nlet pointOneFourOneFiveNine = 0.14159\nlet piValue = Double(three) + pointOneFourOneFiveNine',
-      },
-      {
-        h: 'Tipos básicos y tuplas',
-        p: '`Int`, `Double`, `Float`, `Bool` y `String` son los tipos fundamentales. Las tuplas agrupan varios valores en uno solo, de cualquier tipo, y puedes descomponerlas o acceder a sus elementos por índice o por nombre.',
-        code: 'let http404Error = (404, "Not Found")\nlet (statusCode, statusMessage) = http404Error\nprint(http404Error.0) // 404\n\nlet http200Status = (statusCode: 200, description: "OK")\nprint(http200Status.description)',
-      },
-      {
-        h: 'Imprimir y comentar',
-        p: '`print(_:separator:terminator:)` escribe en la consola; por defecto añade un salto de línea. La interpolación `\\(valor)` inserta valores dentro de un String. Los comentarios usan `//` o `/* */`, y los comentarios de bloque se pueden anidar. El punto y coma solo es necesario si escribes varias sentencias en una misma línea.',
-        code: 'let friendlyWelcome = "Hello!"\nprint("El valor es \\(friendlyWelcome)")\n/* comentario /* anidado */ */\nlet cat = "🐱"; print(cat)',
-      },
-    ],
+    ...basicsReading,
     lessons: [
       {
         title: 'let y var',
@@ -83,33 +58,7 @@ export const unitsA = [
     icon: '❓',
     color: '#CE82FF',
     sources: [tspl('thebasics', 'The Basics · Optionals'), tspl('optionalchaining', 'Optional Chaining')],
-    reading: [
-      {
-        h: '¿Qué es un opcional?',
-        p: 'Un opcional representa dos posibilidades: hay un valor de un tipo concreto, o no hay ningún valor (`nil`). Se escribe con `?` tras el tipo. Por ejemplo, `Int("123")` devuelve `Int?` porque la conversión podría fallar.',
-        code: 'let possibleNumber = "123"\nlet convertedNumber = Int(possibleNumber)\n// convertedNumber es de tipo Int?\n\nvar serverResponseCode: Int? = 404\nserverResponseCode = nil',
-      },
-      {
-        h: 'Enlace opcional: if let',
-        p: 'El enlace opcional (optional binding) comprueba si hay valor y, si lo hay, lo deja disponible como constante o variable no opcional. Desde Swift 5.7 puedes escribir la forma corta `if let nombre {`.',
-        code: 'if let actualNumber = Int(possibleNumber) {\n    print("Es el número \\(actualNumber)")\n} else {\n    print("No se pudo convertir")\n}\n\nlet myNumber = Int(possibleNumber)\nif let myNumber {\n    print("Mi número es \\(myNumber)")\n}',
-      },
-      {
-        h: 'guard let y salida temprana',
-        p: '`guard` exige que una condición sea verdadera para continuar; si no, el bloque `else` debe salir del ámbito (`return`, `break`, `continue` o `throw`). Las constantes enlazadas con `guard let` siguen disponibles después del guard.',
-        code: 'func greet(person: [String: String]) {\n    guard let name = person["name"] else {\n        return\n    }\n    print("Hola \\(name)!")\n}',
-      },
-      {
-        h: 'Valor por defecto y desempaquetado forzado',
-        p: 'El operador de coalescencia `??` devuelve el valor del opcional o, si es `nil`, un valor por defecto. El desempaquetado forzado `!` accede al valor directamente, pero provoca un error en tiempo de ejecución si el opcional es `nil`.',
-        code: 'let name: String? = nil\nlet greeting = "Hola, " + (name ?? "amigo")\n\nlet number = convertedNumber! // falla si es nil',
-      },
-      {
-        h: 'Encadenamiento opcional',
-        p: 'Con `?.` puedes acceder a propiedades, métodos y subíndices de un opcional. Si algún eslabón es `nil`, toda la expresión devuelve `nil` sin fallar, y el resultado siempre es opcional.',
-        code: 'class Person { var residence: Residence? }\nclass Residence { var numberOfRooms = 1 }\n\nlet john = Person()\nif let roomCount = john.residence?.numberOfRooms {\n    print("Tiene \\(roomCount) habitaciones")\n} else {\n    print("No se pudo obtener")\n}',
-      },
-    ],
+    ...optionalsReading,
     lessons: [
       {
         title: 'nil y tipos opcionales',
@@ -154,28 +103,7 @@ export const unitsA = [
     icon: '🔤',
     color: '#1CB0F6',
     sources: [tspl('basicoperators', 'Basic Operators'), tspl('stringsandcharacters', 'Strings and Characters')],
-    reading: [
-      {
-        h: 'Operadores básicos',
-        p: 'Swift incluye operadores aritméticos (`+ - * / %`), de asignación compuesta (`+=`), de comparación (`== != > <`), lógicos (`! && ||`) y el ternario `condición ? a : b`. A diferencia de C, la asignación `=` no devuelve valor, lo que evita escribir `if x = y` por error. Los operadores aritméticos detectan el desbordamiento y no lo permiten por defecto.',
-        code: 'let contentHeight = 40\nlet hasHeader = true\nlet rowHeight = contentHeight + (hasHeader ? 50 : 20)\n// rowHeight = 90\n\nprint(9 % 4)   // 1\nprint(-9 % 4)  // -1',
-      },
-      {
-        h: 'Rangos',
-        p: 'El rango cerrado `a...b` incluye ambos extremos. El semiabierto `a..<b` excluye `b`, útil con índices de arrays. Los rangos unilaterales `2...`, `...2` y `..<2` llegan hasta donde sea posible en una dirección.',
-        code: 'for index in 1...5 { print(index) } // 1 a 5\n\nlet names = ["Anna", "Alex", "Brian", "Jack"]\nfor i in 0..<names.count { print(names[i]) }\nfor name in names[2...] { print(name) } // Brian, Jack',
-      },
-      {
-        h: 'Strings',
-        p: '`String` es un tipo de valor: se copia al asignarlo o pasarlo a una función. Se concatenan con `+`, se interpolan con `\\()` y los literales multilínea usan tres comillas `"""`. Un String es una colección de `Character`.',
-        code: 'var variableString = "Horse"\nvariableString += " and carriage"\n\nlet quotation = """\nThe White Rabbit put on his spectacles.\n"""\n\nfor character in "Dog!🐶" { print(character) }',
-      },
-      {
-        h: 'Unicode, count e índices',
-        p: 'Swift trata los caracteres como grupos de grafemas extendidos, así que `count` cuenta caracteres visibles, no bytes. Por eso no puedes indexar un String con enteros: usas `String.Index`, con `startIndex`, `endIndex` e `index(_:offsetBy:)`.',
-        code: 'let greeting = "Guten Tag!"\ngreeting[greeting.startIndex]                         // G\ngreeting[greeting.index(before: greeting.endIndex)]   // !\nlet index = greeting.index(greeting.startIndex, offsetBy: 7)\ngreeting[index]                                       // a',
-      },
-    ],
+    ...stringsReading,
     lessons: [
       {
         title: 'Operadores',
@@ -220,32 +148,7 @@ export const unitsA = [
     icon: '📦',
     color: '#FF9600',
     sources: [tspl('collectiontypes', 'Collection Types'), { label: 'Apple · Array', url: 'https://developer.apple.com/documentation/swift/array' }],
-    reading: [
-      {
-        h: 'Tres colecciones principales',
-        p: 'Los arrays son colecciones ordenadas. Los sets son colecciones sin orden de valores únicos. Los diccionarios son colecciones sin orden de pares clave-valor. Si los asignas a una variable (`var`) son mutables; si los asignas a una constante (`let`), son inmutables.',
-      },
-      {
-        h: 'Array',
-        p: 'Se escribe `[Element]`. Puedes añadir con `append(_:)` o `+=`, insertar con `insert(_:at:)` y eliminar con `remove(at:)`. Acceder a un índice fuera de rango provoca un error en tiempo de ejecución.',
-        code: 'var shoppingList = ["Eggs", "Milk"]\nshoppingList.append("Flour")\nshoppingList += ["Butter"]\nshoppingList.insert("Syrup", at: 0)\nlet first = shoppingList[0]\nprint(shoppingList.count, shoppingList.isEmpty)\n\nfor (index, value) in shoppingList.enumerated() {\n    print("\\(index + 1): \\(value)")\n}',
-      },
-      {
-        h: 'Set',
-        p: 'Un `Set<Element>` guarda valores únicos sin orden. Sus elementos deben ser `Hashable`. Ofrece operaciones de conjuntos: `union`, `intersection`, `subtracting`, `symmetricDifference`.',
-        code: 'var genres: Set<String> = ["Rock", "Classical", "Hip hop"]\ngenres.insert("Jazz")\nlet odd: Set = [1, 3, 5, 7, 9]\nlet even: Set = [0, 2, 4, 6, 8]\nodd.union(even).sorted() // [0, 1, ..., 9]',
-      },
-      {
-        h: 'Dictionary',
-        p: 'Se escribe `[Key: Value]`. El subíndice devuelve un opcional, porque la clave podría no existir. `updateValue(_:forKey:)` devuelve el valor anterior. Asignar `nil` elimina el par.',
-        code: 'var airports = ["YYZ": "Toronto Pearson", "DUB": "Dublin"]\nairports["LHR"] = "London"\nif let name = airports["DUB"] { print(name) }\nairports["LHR"] = nil // elimina\n\nfor (code, name) in airports { print("\\(code): \\(name)") }',
-      },
-      {
-        h: 'Funciones de orden superior',
-        p: 'La biblioteca estándar ofrece `map`, `filter`, `reduce`, `sorted`, `contains`, `first(where:)` y más para trabajar con colecciones de forma declarativa.',
-        code: 'let numbers = [1, 2, 3, 4, 5]\nlet doubled = numbers.map { $0 * 2 }       // [2, 4, 6, 8, 10]\nlet evens = numbers.filter { $0 % 2 == 0 } // [2, 4]\nlet sum = numbers.reduce(0, +)             // 15',
-      },
-    ],
+    ...collectionsReading,
     lessons: [
       {
         title: 'Arrays',
@@ -280,33 +183,7 @@ export const unitsA = [
     icon: '🔀',
     color: '#FF4B4B',
     sources: [tspl('controlflow', 'Control Flow')],
-    reading: [
-      {
-        h: 'Ciclos',
-        p: '`for-in` recorre secuencias: rangos, arrays, diccionarios o caracteres. `stride(from:to:by:)` permite saltos. `while` evalúa la condición antes de cada vuelta y `repeat-while` la evalúa después (se ejecuta al menos una vez).',
-        code: 'for tickMark in stride(from: 0, to: 60, by: 5) { }\n\nvar n = 0\nrepeat {\n    n += 1\n} while n < 3',
-      },
-      {
-        h: 'if y expresiones if',
-        p: 'Además del `if` clásico, Swift permite usar `if` y `switch` como expresiones para asignar un valor. Cada rama debe producir un valor del mismo tipo.',
-        code: 'let temperatureInCelsius = 25\nlet weatherAdvice = if temperatureInCelsius <= 0 {\n    "Hace mucho frío."\n} else if temperatureInCelsius >= 30 {\n    "Hace calor."\n} else {\n    "Clima agradable."\n}',
-      },
-      {
-        h: 'switch',
-        p: '`switch` debe ser exhaustivo: cubrir todos los valores posibles (o incluir `default`). No hay paso implícito entre casos (no se necesita `break`), y cada caso debe tener al menos una sentencia. Admite rangos, tuplas, enlace de valores (`let`) y cláusulas `where`.',
-        code: 'let somePoint = (1, 1)\nswitch somePoint {\ncase (0, 0):\n    print("origen")\ncase (_, 0):\n    print("sobre el eje x")\ncase let (x, y) where x == y:\n    print("en la línea x == y")\ndefault:\n    print("en otro lugar")\n}',
-      },
-      {
-        h: 'Transferencia de control',
-        p: '`continue` pasa a la siguiente iteración, `break` termina el ciclo o el switch, `fallthrough` fuerza la entrada al siguiente caso y `return`/`throw` salen de la función. Las sentencias con etiqueta permiten indicar a qué ciclo afecta un `break` o un `continue`.',
-        code: 'outer: for i in 1...3 {\n    for j in 1...3 {\n        if j == 2 { continue outer }\n        print(i, j)\n    }\n}',
-      },
-      {
-        h: 'Disponibilidad de API',
-        p: 'Con `if #available(iOS 17, macOS 14, *)` ejecutas código solo si las API están disponibles en el sistema donde corre la app.',
-        code: 'if #available(iOS 17, macOS 14, *) {\n    // usar API nuevas\n} else {\n    // alternativa\n}',
-      },
-    ],
+    ...controlFlowReading,
     lessons: [
       {
         title: 'Ciclos',

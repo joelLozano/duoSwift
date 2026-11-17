@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { unitById, courseById, isLessonUnlocked } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { CodeBlock, Rich } from '../components/Code.jsx'
+import { PhonePreview, Diagram } from '../components/Illustration.jsx'
 
 export default function ReadingPage() {
   const { unitId } = useParams()
@@ -32,12 +33,19 @@ export default function ReadingPage() {
         </div>
       </header>
 
+      {unit.intro && (
+        <div className="reading-intro card">
+          <p><Rich text={unit.intro} /></p>
+        </div>
+      )}
+
       <nav className="toc card">
         <b>En esta lectura</b>
         <ol>
           {unit.reading.map((s, i) => (
             <li key={i}><a href={`#s${i}`}>{s.h}</a></li>
           ))}
+          {unit.summary && <li><a href="#resumen">Resumen</a></li>}
         </ol>
       </nav>
 
@@ -45,9 +53,34 @@ export default function ReadingPage() {
         <section key={i} id={`s${i}`} className="reading-section">
           <h2>{s.h}</h2>
           <p><Rich text={s.p} /></p>
+          {s.diagramBefore && <Diagram diagram={s.diagramBefore} />}
           {s.code && <CodeBlock code={s.code} />}
+          {s.preview && <PhonePreview preview={s.preview} />}
+          {s.diagram && <Diagram diagram={s.diagram} />}
+          {s.out && (
+            <div className="reading-out">
+              <span className="reading-out-label">Salida</span>
+              <pre>{s.out}</pre>
+            </div>
+          )}
+          {s.after && <p><Rich text={s.after} /></p>}
+          {s.tip && (
+            <aside className="callout tip"><b>💡 Consejo</b><p><Rich text={s.tip} /></p></aside>
+          )}
+          {s.warn && (
+            <aside className="callout warn"><b>⚠️ Error común</b><p><Rich text={s.warn} /></p></aside>
+          )}
         </section>
       ))}
+
+      {unit.summary && (
+        <section id="resumen" className="reading-section summary card">
+          <h2>Resumen</h2>
+          <ul>
+            {unit.summary.map((item, i) => <li key={i}><Rich text={item} /></li>)}
+          </ul>
+        </section>
+      )}
 
       <section className="sources card">
         <b>📚 Fuentes oficiales</b>
