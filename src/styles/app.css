@@ -723,3 +723,53 @@ input:focus, select:focus { border-color: var(--blue); }
   .ph-figure figcaption { font-size: 1.1rem; }
 }
 .reading .inline-code { overflow-wrap: anywhere; }
+
+/* ============================ Aviso de instalación (PWA) ============================ */
+.install-prompt {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 1000;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 14px 40px 14px 14px;
+  background: var(--card);
+  color: var(--text);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .18);
+  animation: install-in .3s ease-out;
+}
+@media (max-width: 680px) {
+  /* encima de la barra de navegación inferior en móvil */
+  .install-prompt { bottom: calc(var(--bottomnav) + 12px + env(safe-area-inset-bottom)); }
+}
+.install-icon { border-radius: 12px; flex-shrink: 0; }
+.install-body { flex: 1; min-width: 0; }
+.install-body strong { display: block; font-size: 1.05rem; font-weight: 900; }
+.install-body p { margin: 4px 0 10px; color: var(--muted); font-size: .92rem; line-height: 1.4; }
+.install-body p b { color: var(--text); }
+.install-share-icon { vertical-align: -3px; color: var(--blue); }
+.install-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.install-actions .btn { min-height: 40px; padding: 8px 14px; font-size: .85rem; width: auto; flex: 0 0 auto; margin: 0; }
+.install-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+@keyframes install-in {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}

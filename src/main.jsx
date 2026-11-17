@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
+import InstallPrompt from './components/InstallPrompt.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { ProgressProvider } from './context/ProgressContext.jsx'
 import './styles/app.css'
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <ProgressProvider>
           <App />
+          <InstallPrompt />
         </ProgressProvider>
       </AuthProvider>
     </BrowserRouter>
