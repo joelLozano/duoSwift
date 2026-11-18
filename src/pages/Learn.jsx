@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { isLessonUnlocked, isUnitComplete, EXAM_PASS } from '../data/index.js'
+import { isLessonUnlocked, isReadingDone, isUnitComplete, EXAM_PASS } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { dueQuestions, todayXp, unitMastery, useCourse } from '../lib/selectors.js'
@@ -17,6 +17,8 @@ export default function Learn() {
   const due = dueQuestions(progress, [course.id]).length
   const xpToday = todayXp(progress)
   const goalDone = xpToday >= progress.dailyGoal
+  const nextNeedsReading = nextLesson && !isReadingDone(nextLesson.unitId, progress.readings)
+  const nextUnit = nextLesson && units.find((u) => u.id === nextLesson.unitId)
 
   return (
     <div className="learn">
@@ -31,9 +33,15 @@ export default function Learn() {
         </div>
         <div className="hello-actions">
           {nextLesson ? (
-            <button className="btn btn-primary" onClick={() => navigate(`/lesson/${nextLesson.id}`)}>
-              {course.lessons.some((l) => lp[l.id]) ? 'Continuar' : 'Empezar'} · {nextLesson.title}
-            </button>
+            nextNeedsReading ? (
+              <button className="btn btn-primary" onClick={() => navigate(`/readings/${nextLesson.unitId}`)}>
+                📖 Leer · {nextUnit.title}
+              </button>
+            ) : (
+              <button className="btn btn-primary" onClick={() => navigate(`/lesson/${nextLesson.id}`)}>
+                {course.lessons.some((l) => lp[l.id]) ? 'Continuar' : 'Empezar'} · {nextLesson.title}
+              </button>
+            )
           ) : (
             <Link className="btn btn-primary" to={`/exam/${course.finalExamId}`}>🏆 Examen final</Link>
           )}
@@ -47,6 +55,7 @@ export default function Learn() {
         const complete = isUnitComplete(u, lp)
         const examBest = Math.max(0, ...(progress.exams[u.id] || []).map((r) => r.score / r.total))
         const mastery = unitMastery(progress, u)
+        const read = isReadingDone(u.id, progress.readings)
         return (
           <div key={u.id}>
           {showModule && <h2 className="module-title">{u.module}</h2>}
@@ -58,7 +67,13 @@ export default function Learn() {
                 <p>{u.subtitle}</p>
               </div>
               <div className="unit-actions">
-                <Link to={`/readings/${u.id}`} className="pill" title="Lectura">📖 <span className="hide-xs">Lectura</span></Link>
+                <Link
+                  to={`/readings/${u.id}`}
+                  className={`pill ${read ? 'done' : ''} ${unlocked && !read ? 'pulse-pill' : ''}`}
+                  title={read ? 'Lectura completada' : 'Lee esta unidad para desbloquear sus lecciones'}
+                >
+                  {read ? '✓' : '📖'} <span className="hide-xs">Lectura</span>
+                </Link>
                 <span className="pill ghost" title="Dominio">{Math.round(mastery * 100)}%</span>
               </div>
             </header>
@@ -68,17 +83,18 @@ export default function Learn() {
                 const done = Boolean(lp[l.id])
                 const open = isLessonUnlocked(l.id, lp)
                 const current = open && !done
+                const mustRead = current && !read // la lección toca, pero falta la lectura
                 const off = OFFSETS[(i + u.index * 2) % OFFSETS.length]
                 return (
                   <div key={l.id} className="path-row" style={{ transform: `translateX(${off}px)` }}>
-                    {current && <div className="start-bubble">EMPEZAR</div>}
+                    {current && <div className="start-bubble">{mustRead ? 'LEE PRIMERO' : 'EMPEZAR'}</div>}
                     <button
                       className={`node ${done ? 'done' : ''} ${current ? 'current' : ''} ${open ? '' : 'locked'}`}
                       disabled={!open}
-                      onClick={() => navigate(`/lesson/${l.id}`)}
-                      aria-label={`${l.title}${done ? ' (completada)' : ''}`}
+                      onClick={() => navigate(mustRead ? `/readings/${u.id}` : `/lesson/${l.id}`)}
+                      aria-label={`${l.title}${done ? ' (completada)' : mustRead ? ' (primero haz la lectura)' : ''}`}
                     >
-                      {done ? (lp[l.id].best === 1 ? '👑' : '✓') : open ? '★' : '🔒'}
+                      {done ? (lp[l.id].best === 1 ? '👑' : '✓') : mustRead ? '📖' : open ? '★' : '🔒'}
                     </button>
                     <div className="node-label">{l.title}</div>
                   </div>

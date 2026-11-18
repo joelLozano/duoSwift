@@ -3,7 +3,7 @@ import { useAuth } from './AuthContext.jsx'
 import { loadProgress, saveProgress, resetProgress } from '../lib/backend.js'
 import { initialProgress, regenHearts, addXp, MAX_HEARTS } from '../lib/game.js'
 import { review } from '../lib/srs.js'
-import { courseById } from '../data/index.js'
+import { courseById, units } from '../data/index.js'
 
 const ProgressCtx = createContext(null)
 
@@ -23,6 +23,19 @@ export function ProgressProvider({ children }) {
       merged.stats = { ...initialProgress().stats, ...(p?.stats || {}) }
       // Migración: usuarios anteriores al multi-curso ya estaban aprendiendo Swift
       if (!Array.isArray(p?.enrolled)) merged.enrolled = p && (p.xp > 0 || Object.keys(p.lessons || {}).length) ? ['swift'] : []
+      // Migración: las unidades con lecciones ya hechas (antes de exigir la lectura) cuentan como leídas, sin XP extra
+      const readings = { ...merged.readings }
+      for (const u of units) {
+        const done = u.lessons.find((l) => merged.lessons[l.id])
+        if (done && !readings[u.id]) readings[u.id] = merged.lessons[done.id].completedAt || Date.now()
+      }
+      merged.readings = readings
+      // Migración: el máximo de vidas pasó de 5 a 10; a quienes ya tenían cuenta se les dan las 5 nuevas una sola vez
+      if (!merged.heartsV2) {
+        merged.hearts = Math.min(MAX_HEARTS, merged.hearts + 5)
+        if (merged.hearts >= MAX_HEARTS) merged.heartsUpdatedAt = Date.now()
+        merged.heartsV2 = true
+      }
       merged.enrolled = merged.enrolled.filter((id) => courseById[id])
       if (!merged.enrolled.includes(merged.activeCourse)) merged.activeCourse = merged.enrolled[0] || null
       setProgress(merged)

@@ -13,6 +13,8 @@ import { aiInterview, AI_INTERVIEW_CATEGORIES } from './ai/interview.js'
 import { cleanModule1, cleanModule2 } from './clean/module1.js'
 import { cleanModule3, cleanModule4 } from './clean/module2.js'
 import { cleanInterview, CLEAN_INTERVIEW_CATEGORIES } from './clean/interview.js'
+import { caLayers, caFlow, caFeature } from './clean/layers.js'
+import { cleanKotlin } from './clean/kotlin.js'
 import { algoModule1, algoModule2 } from './algo/module1.js'
 import { algoModule3 } from './algo/module2.js'
 import { algoInterview, ALGO_INTERVIEW_CATEGORIES } from './algo/interview.js'
@@ -25,6 +27,7 @@ import { swiftuiInterview, SWIFTUI_INTERVIEW_CATEGORIES } from './swiftui/interv
 import { kotlinModule2 } from './kotlin/module2.js'
 import { kotlinModule3 } from './kotlin/module3.js'
 import { kotlinInterview, KOTLIN_INTERVIEW_CATEGORIES } from './kotlin/interview.js'
+import { SIMPLE } from './simple/index.js'
 
 /**
  * Catálogo de cursos. Cada curso tiene sus unidades (lecciones + lectura),
@@ -73,7 +76,16 @@ const RAW_COURSES = [
     color: '#0EA5A4',
     level: 'Intermedio → Avanzado',
     sourcesNote: 'Robert C. Martin, Alistair Cockburn, Jeffrey Palermo, Martin Fowler, Apple Developer y Swift.org',
-    units: [...cleanModule1, ...cleanModule2, ...cleanModule3, ...cleanModule4],
+    // Orden: principios → regla → capas → entidades/casos de uso → puertos → comunicación entre capas
+    //        → capas en iOS/Android → feature completa → calidad
+    units: [
+      ...cleanModule1,
+      cleanModule2[0], caLayers, ...cleanModule2.slice(1), caFlow,
+      ...cleanModule3, caFeature,
+      ...cleanModule4,
+    ],
+    // Versión Kotlin de los bloques de código (pestañas Swift / Kotlin)
+    kotlinCode: cleanKotlin,
     interview: cleanInterview,
     interviewCategories: CLEAN_INTERVIEW_CATEGORIES,
     finalExamId: 'clean-final',
@@ -127,6 +139,12 @@ function normalize(course) {
     ...u,
     courseId: course.id,
     index: ui,
+    simple: SIMPLE[u.id] || null, // resumen “Explicado fácil” (src/data/simple)
+    // Si el curso trae versión Kotlin de una sección, el código se muestra con pestañas Swift / Kotlin
+    reading: u.reading.map((s) => {
+      const kotlin = course.kotlinCode?.[u.id]?.[s.h]
+      return kotlin && typeof s.code === 'string' ? { ...s, code: { swift: s.code, kotlin } } : s
+    }),
     lessons: u.lessons.map((l, li) => {
       const lessonId = `${u.id}-L${li + 1}`
       return {
@@ -173,6 +191,11 @@ export function isLessonUnlocked(lessonId, lessonsProgress) {
   const i = list.findIndex((l) => l.id === lessonId)
   return i === 0 || Boolean(lessonsProgress[list[i - 1].id])
 }
+// La lectura de la unidad es requisito para hacer sus lecciones
+export const isReadingDone = (unitId, readings) => Boolean(readings?.[unitId])
+// Se puede hacer una lección si está desbloqueada en el camino y ya se leyó su unidad
+export const canStartLesson = (lessonId, progress) =>
+  isLessonUnlocked(lessonId, progress.lessons) && isReadingDone(lessonById[lessonId]?.unitId, progress.readings)
 export const isUnitComplete = (unit, lessonsProgress) => unit.lessons.every((l) => lessonsProgress[l.id])
 
 export const EXAM_PASS = 0.7

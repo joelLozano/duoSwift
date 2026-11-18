@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { lessonById, isLessonUnlocked, unitById, courseById } from '../data/index.js'
+import { lessonById, isLessonUnlocked, isReadingDone, unitById, courseById } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import QuizSession from '../components/QuizSession.jsx'
 import ResultScreen, { fmtTime } from '../components/ResultScreen.jsx'
@@ -16,6 +16,10 @@ export default function LessonPage() {
   const questions = useMemo(() => (lesson ? shuffle(lesson.questions) : []), [lesson, run]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!lesson || !isLessonUnlocked(lessonId, progress.lessons)) return <Navigate to="/" replace />
+  // Primero la lectura de la unidad; al terminarla, la lectura ofrece volver a esta lección
+  if (!isReadingDone(lesson.unitId, progress.readings)) {
+    return <Navigate to={`/readings/${lesson.unitId}`} replace state={{ pendingLesson: lessonId }} />
+  }
 
   const unit = unitById[lesson.unitId]
   const alreadyDone = Boolean(progress.lessons[lessonId])

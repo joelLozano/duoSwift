@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 const KEYWORDS = new Set(
   ('let var func return if else guard switch case default for in while repeat break continue fallthrough ' +
@@ -67,4 +67,71 @@ export function Rich({ text }) {
     if (p.startsWith('*') && p.endsWith('*') && p.length > 2) return <em key={i}>{p.slice(1, -1)}</em>
     return <Fragment key={i}>{p}</Fragment>
   })
+}
+
+/* ---------- Código en varios lenguajes (Swift / Kotlin) ---------- */
+
+const LANGS = { swift: { label: 'Swift', icon: '🐦' }, kotlin: { label: 'Kotlin', icon: '🟣' } }
+const LANG_KEY = 'duoswift-code-lang'
+const LANG_EVENT = 'duoswift-code-lang'
+
+function readLang() {
+  try {
+    return localStorage.getItem(LANG_KEY) || 'swift'
+  } catch {
+    return 'swift'
+  }
+}
+
+// Lenguaje preferido, compartido por todos los bloques de la página y recordado entre visitas
+export function useCodeLang() {
+  const [lang, setLangState] = useState(readLang)
+  useEffect(() => {
+    const sync = () => setLangState(readLang())
+    window.addEventListener(LANG_EVENT, sync)
+    return () => window.removeEventListener(LANG_EVENT, sync)
+  }, [])
+  const setLang = (l) => {
+    try {
+      localStorage.setItem(LANG_KEY, l)
+    } catch {
+      /* sin almacenamiento: solo cambia en esta vista */
+    }
+    setLangState(l)
+    window.dispatchEvent(new Event(LANG_EVENT))
+  }
+  return [lang, setLang]
+}
+
+/**
+ * Muestra `code` como bloque. Acepta un string (un solo lenguaje) o
+ * un objeto { swift, kotlin } con pestañas para cambiar de lenguaje.
+ */
+export function CodeTabs({ code }) {
+  const [lang, setLang] = useCodeLang()
+  if (typeof code === 'string') return <CodeBlock code={code} />
+  const available = Object.keys(LANGS).filter((l) => code?.[l])
+  if (available.length === 0) return null
+  const current = available.includes(lang) ? lang : available[0]
+  return (
+    <div className="code-tabs">
+      {available.length > 1 && (
+        <div className="code-tabs-bar" role="tablist" aria-label="Lenguaje del código">
+          {available.map((l) => (
+            <button
+              key={l}
+              type="button"
+              role="tab"
+              aria-selected={l === current}
+              className={`code-tab ${l === current ? 'active' : ''}`}
+              onClick={() => setLang(l)}
+            >
+              <span aria-hidden="true">{LANGS[l].icon}</span> {LANGS[l].label}
+            </button>
+          ))}
+        </div>
+      )}
+      <CodeBlock code={code[current]} />
+    </div>
+  )
 }

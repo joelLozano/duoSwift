@@ -1,4 +1,4 @@
-export const MAX_HEARTS = 5
+export const MAX_HEARTS = 10
 export const HEART_REGEN_MIN = 20
 export const DAILY_GOAL_DEFAULT = 30
 
@@ -22,6 +22,7 @@ export function initialProgress() {
     hearts: MAX_HEARTS,
     heartsUpdatedAt: Date.now(),
     dailyGoal: DAILY_GOAL_DEFAULT,
+    heartsV2: true, // ya nace con el máximo de 10 vidas
     enrolled: [], // ids de cursos en los que el usuario está inscrito
     activeCourse: null,
     lessons: {}, // lessonId -> { best, times, completedAt }

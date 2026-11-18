@@ -1,8 +1,9 @@
 // Ilustraciones para las lecturas:
 // - PhonePreview: maqueta tipo iPhone generada a partir de una descripción de nodos
 //   (vstack, hstack, text, button, toggle, list, navbar, tabbar…). Es ilustrativa, no un render real de SwiftUI.
-// - Diagram: diagramas de flujo (pasos con flechas) y de árbol (jerarquía de vistas).
+// - Diagram: diagramas de flujo (pasos con flechas), de árbol (jerarquía de vistas) y tablas comparativas (kind: compare).
 import { Fragment } from 'react'
+import { Rich } from './Code.jsx'
 
 const FONT = {
   largeTitle: { fontSize: 26, fontWeight: 800 },
@@ -282,8 +283,26 @@ function FlowStep({ s }) {
   return (
     <div className="dg-step" style={{ '--dg': s.c || 'var(--unit)' }}>
       {s.icon && <span className="dg-icon">{s.icon}</span>}
-      <b>{s.t}</b>
-      {s.d && <small>{s.d}</small>}
+      <b><Rich text={s.t} /></b>
+      {s.d && <small><Rich text={s.d} /></small>}
+    </div>
+  )
+}
+
+// Tabla de dos columnas: concepto ↔ analogía (o A frente a B)
+function Compare({ d }) {
+  return (
+    <div className="dg-compare" role="table">
+      <div className="dg-compare-row head" role="row">
+        <span role="columnheader">{d.left}</span>
+        <span role="columnheader">{d.right}</span>
+      </div>
+      {d.rows.map(([a, b], i) => (
+        <div key={i} className="dg-compare-row" role="row">
+          <span role="cell"><Rich text={a} /></span>
+          <span role="cell"><Rich text={b} /></span>
+        </div>
+      ))}
     </div>
   )
 }
@@ -292,7 +311,7 @@ function TreeNode({ n }) {
   return (
     <div className="dg-tree-node">
       <div className="dg-tree-box" style={{ '--dg': n.c || 'var(--unit)' }}>
-        <b>{n.t}</b>{n.d && <small>{n.d}</small>}
+        <b><Rich text={n.t} /></b>{n.d && <small><Rich text={n.d} /></small>}
       </div>
       {n.children?.length > 0 && (
         <div className="dg-tree-children">
@@ -306,7 +325,9 @@ function TreeNode({ n }) {
 export function Diagram({ diagram: d }) {
   return (
     <figure className="dg-wrap">
-      {d.kind === 'tree' ? (
+      {d.kind === 'compare' ? (
+        <Compare d={d} />
+      ) : d.kind === 'tree' ? (
         <div className="dg-tree"><TreeNode n={d.root} /></div>
       ) : (
         <div className={`dg-flow ${d.dir === 'col' ? 'col' : 'row'} ${d.loop ? 'loop' : ''}`}>

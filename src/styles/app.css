@@ -773,3 +773,91 @@ input:focus, select:focus { border-color: var(--blue); }
   from { transform: translateY(20px); opacity: 0; }
   to { transform: none; opacity: 1; }
 }
+
+/* ============================ Lectura obligatoria ============================ */
+.read-gate { margin: 0 0 16px; }
+.pulse-pill { animation: pill-pulse 1.6s ease-in-out infinite; }
+@keyframes pill-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, .7); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .pulse-pill { animation: none; } }
+
+/* ============================ Explicado fácil ============================ */
+.simple-jump {
+  display: flex; align-items: center; gap: 10px; margin: 0 0 16px; padding: 12px 14px;
+  border-radius: 14px; background: color-mix(in srgb, var(--gold) 18%, var(--card));
+  border: 2px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  color: var(--text); text-decoration: none; font-size: .95rem; line-height: 1.35;
+}
+.simple-jump > span:first-child { font-size: 1.5rem; }
+.simple-jump > span:nth-child(2) { flex: 1; }
+.simple-jump > span:last-child { font-weight: 900; color: var(--gold-d); }
+.simple-jump:hover { filter: brightness(1.03); }
+
+.reading-section.simple {
+  border-color: color-mix(in srgb, var(--gold) 60%, var(--line));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 10%, var(--card)), var(--card) 40%);
+}
+.simple-head { display: flex; gap: 12px; align-items: center; margin-bottom: 14px; }
+.simple-head h2 { margin: 0; }
+.simple-head p { margin: 2px 0 0; font-size: .9rem; }
+.simple-badge {
+  width: 52px; height: 52px; flex-shrink: 0; display: grid; place-items: center; font-size: 1.8rem;
+  border-radius: 16px; background: var(--gold); box-shadow: 0 4px 0 var(--gold-d);
+}
+.simple-analogy {
+  display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 14px;
+  background: var(--bg-2); border: 2px solid var(--line);
+}
+.simple-analogy-icon { font-size: 2.4rem; line-height: 1; }
+.simple-analogy b { display: block; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.simple-analogy p { margin: 4px 0 0; font-size: 1.02rem; line-height: 1.5; }
+.simple-sub { font-size: 1rem; margin: 18px 0 8px; }
+.simple-points { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.simple-points li { position: relative; padding: 10px 12px 10px 40px; border-radius: 12px; background: var(--bg-2); line-height: 1.45; }
+.simple-points li::before {
+  content: '✓'; position: absolute; left: 10px; top: 9px; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; font-size: .75rem; font-weight: 900; color: #fff; background: var(--green);
+}
+.simple-example { margin-top: 14px; padding: 12px 14px; border-radius: 14px; background: color-mix(in srgb, var(--blue) 12%, var(--card)); border: 2px solid color-mix(in srgb, var(--blue) 35%, transparent); }
+.simple-example b { font-size: .92rem; }
+.simple-example p { margin: 4px 0 0; line-height: 1.5; }
+.simple-oneliner {
+  margin: 14px 0 0; padding: 12px 14px; border-radius: 14px; font-weight: 800; text-align: center;
+  background: var(--ok-bg); color: var(--ok-text);
+}
+
+/* Diagrama comparativo (kind: 'compare') */
+.dg-compare { width: 100%; max-width: 560px; display: grid; gap: 6px; }
+.dg-compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.dg-compare-row > span {
+  padding: 8px 10px; border-radius: 10px; background: var(--card); border: 2px solid var(--line);
+  font-size: .86rem; line-height: 1.35; font-weight: 600; overflow-wrap: anywhere;
+}
+.dg-compare-row > span:first-child { border-color: color-mix(in srgb, var(--unit) 45%, var(--line)); }
+.dg-compare-row.head > span { background: var(--unit); border-color: transparent; color: #fff; font-weight: 900; text-align: center; font-size: .82rem; }
+.dg-compare .inline-code { font-size: .8em; }
+
+/* Código del ejemplo, estilo libro */
+.simple-code { margin-top: 16px; }
+.simple-code-title { margin: -2px 0 8px; font-weight: 800; color: var(--muted); font-size: .9rem; }
+.simple-code .code { margin: 0; font-size: .8rem; }
+.simple-code-hint { display: none; margin: 4px 2px 0; font-size: .75rem; font-weight: 700; color: var(--muted); text-align: right; }
+@media (max-width: 680px) { .simple-code-hint { display: block; } }
+.simple-code-notes { margin-top: 10px; padding: 12px 14px; border-radius: 14px; background: var(--bg-2); border: 2px dashed var(--line-2); }
+.simple-code-notes b { font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.simple-code-notes ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.simple-code-notes li { line-height: 1.45; font-size: .95rem; }
+
+/* ============================ Código Swift / Kotlin ============================ */
+.code-tabs { margin: 12px 0; }
+.code-tabs .code { margin-top: 0; border-top-left-radius: 0; }
+.code-tabs-bar { display: flex; gap: 4px; }
+.code-tab {
+  border: 0; cursor: pointer; padding: 7px 14px; border-radius: 12px 12px 0 0;
+  font: inherit; font-size: .82rem; font-weight: 800; color: var(--muted); background: var(--bg-2);
+}
+.code-tab.active { background: var(--code-bg); color: var(--code-text); }
+.code-tab:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.simple-code .code-tabs { margin: 0; }
