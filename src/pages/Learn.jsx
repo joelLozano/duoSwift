@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { isLessonUnlocked, isReadingDone, isUnitComplete, EXAM_PASS } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
@@ -5,6 +6,38 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { dueQuestions, todayXp, unitMastery, useCourse } from '../lib/selectors.js'
 
 const OFFSETS = [0, 46, 70, 46, 0, -46, -70, -46]
+
+// Unidades colapsadas por curso: guarda solo lo que el usuario eligió (unitId → true/false)
+const collapseKey = (courseId) => `duoswift-collapsed-${courseId}`
+
+function useCollapsedUnits(courseId) {
+  const [choices, setChoices] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(collapseKey(courseId))) || {}
+    } catch {
+      return {}
+    }
+  })
+  const [forCourse, setForCourse] = useState(courseId)
+  // Al cambiar de curso, cargar las elecciones de ese curso
+  if (forCourse !== courseId) {
+    setForCourse(courseId)
+    try {
+      setChoices(JSON.parse(localStorage.getItem(collapseKey(courseId))) || {})
+    } catch {
+      setChoices({})
+    }
+  }
+  const save = (next) => {
+    setChoices(next)
+    try {
+      localStorage.setItem(collapseKey(courseId), JSON.stringify(next))
+    } catch {
+      /* sin almacenamiento: solo dura esta visita */
+    }
+  }
+  return [choices, save]
+}
 
 export default function Learn() {
   const { progress } = useProgress()
@@ -19,6 +52,14 @@ export default function Learn() {
   const goalDone = xpToday >= progress.dailyGoal
   const nextNeedsReading = nextLesson && !isReadingDone(nextLesson.unitId, progress.readings)
   const nextUnit = nextLesson && units.find((u) => u.id === nextLesson.unitId)
+
+  // Colapsar / expandir unidades. Por defecto: las terminadas colapsadas, el resto abiertas.
+  const [collapsedChoices, setCollapsedChoices] = useCollapsedUnits(course.id)
+  const isCollapsed = (u) => collapsedChoices[u.id] ?? (isUnitComplete(u, lp) && u.id !== nextLesson?.unitId)
+  const toggleUnit = (u) => setCollapsedChoices({ ...collapsedChoices, [u.id]: !isCollapsed(u) })
+  const setAll = (collapsed) => setCollapsedChoices(Object.fromEntries(units.map((u) => [u.id, collapsed])))
+  const allCollapsed = units.every(isCollapsed)
+  const allExpanded = units.every((u) => !isCollapsed(u))
 
   return (
     <div className="learn">
@@ -49,6 +90,15 @@ export default function Learn() {
         </div>
       </section>
 
+      <div className="map-controls" role="group" aria-label="Mostrar unidades">
+        <button type="button" className="btn btn-ghost btn-sm" onClick={() => setAll(false)} disabled={allExpanded}>
+          ▾ Expandir todo
+        </button>
+        <button type="button" className="btn btn-ghost btn-sm" onClick={() => setAll(true)} disabled={allCollapsed}>
+          ▸ Colapsar todo
+        </button>
+      </div>
+
       {units.map((u, ui) => {
         const showModule = u.module && u.module !== units[ui - 1]?.module
         const unlocked = isLessonUnlocked(u.lessons[0].id, lp)
@@ -56,16 +106,41 @@ export default function Learn() {
         const examBest = Math.max(0, ...(progress.exams[u.id] || []).map((r) => r.score / r.total))
         const mastery = unitMastery(progress, u)
         const read = isReadingDone(u.id, progress.readings)
+        const collapsed = isCollapsed(u)
+        const doneCount = u.lessons.filter((l) => lp[l.id]).length
+        const bodyId = `unit-body-${u.id}`
         return (
           <div key={u.id}>
           {showModule && <h2 className="module-title">{u.module}</h2>}
-          <section className={`unit ${unlocked ? '' : 'locked'}`} style={{ '--unit': u.color }}>
+          <section className={`unit ${unlocked ? '' : 'locked'} ${collapsed ? 'collapsed' : ''}`} style={{ '--unit': u.color }}>
             <header className="unit-banner">
-              <div>
-                <div className="unit-label">Unidad {u.index + 1}</div>
-                <h2>{u.icon} {u.title}</h2>
-                <p>{u.subtitle}</p>
-              </div>
+              <button
+                type="button"
+                className="unit-toggle"
+                onClick={() => toggleUnit(u)}
+                aria-expanded={!collapsed}
+                aria-controls={bodyId}
+                title={collapsed ? 'Expandir unidad' : 'Colapsar unidad'}
+              >
+                <span className="unit-chevron" aria-hidden="true">▾</span>
+                <span className="unit-toggle-text">
+                  <span className="unit-label">
+                    Unidad {u.index + 1}
+                    {collapsed && (
+                      <span className="unit-mini">
+                        {' · '}{complete ? (examBest >= EXAM_PASS ? '🏆 Completada' : '✓ Lecciones listas') : `${doneCount}/${u.lessons.length} lecciones`}
+                      </span>
+                    )}
+                  </span>
+                  <h2>{u.icon} {u.title}</h2>
+                  {!collapsed && <p>{u.subtitle}</p>}
+                  {collapsed && (
+                    <span className="unit-mini-bar" aria-hidden="true">
+                      <span style={{ width: `${(doneCount / u.lessons.length) * 100}%` }} />
+                    </span>
+                  )}
+                </span>
+              </button>
               <div className="unit-actions">
                 <Link
                   to={`/readings/${u.id}`}
@@ -78,6 +153,8 @@ export default function Learn() {
               </div>
             </header>
 
+            <div id={bodyId} className="unit-body" inert={collapsed}>
+            <div className="unit-body-inner">
             <div className="path">
               {u.lessons.map((l, i) => {
                 const done = Boolean(lp[l.id])
@@ -111,6 +188,8 @@ export default function Learn() {
                 </button>
                 <div className="node-label">Examen {examBest > 0 ? `· ${Math.round(examBest * 100)}%` : ''}</div>
               </div>
+            </div>
+            </div>
             </div>
           </section>
           </div>

@@ -861,3 +861,32 @@ input:focus, select:focus { border-color: var(--blue); }
 .code-tab.active { background: var(--code-bg); color: var(--code-text); }
 .code-tab:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .simple-code .code-tabs { margin: 0; }
+
+/* ============================ Mapa: colapsar / expandir unidades ============================ */
+.map-controls { display: flex; justify-content: flex-end; gap: 8px; margin: -8px 0 14px; flex-wrap: wrap; }
+.btn-sm { min-height: 36px; padding: 6px 12px; font-size: .78rem; }
+.unit-toggle {
+  flex: 1; min-width: 0; display: flex; align-items: flex-start; gap: 10px; text-align: left;
+  background: none; border: 0; padding: 0; margin: 0; color: inherit; font: inherit; cursor: pointer;
+}
+.unit-toggle:focus-visible { outline: 3px solid #fff; outline-offset: 4px; border-radius: 10px; }
+.unit-toggle-text { min-width: 0; display: block; }
+.unit-toggle-text > * { display: block; }
+.unit-chevron {
+  flex-shrink: 0; width: 30px; height: 30px; margin-top: 2px; display: grid; place-items: center; border-radius: 50%;
+  background: rgba(255,255,255,.22); font-size: 1rem; transition: transform .25s ease;
+}
+.unit.collapsed .unit-chevron { transform: rotate(-90deg); }
+.unit-mini { text-transform: none; letter-spacing: 0; font-weight: 800; }
+.unit-mini-bar { margin-top: 8px; height: 6px; width: 140px; max-width: 100%; border-radius: 999px; background: rgba(255,255,255,.3); overflow: hidden; }
+.unit-mini-bar > span { display: block; height: 100%; background: #fff; border-radius: inherit; }
+.unit.collapsed { margin-bottom: 14px; }
+
+/* El cuerpo se anima de alto 0 a su alto natural */
+.unit-body { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .3s ease, opacity .3s ease; }
+.unit-body-inner { overflow: hidden; min-height: 0; }
+.unit-body-inner > .path { padding-bottom: 14px; }   /* deja ver la sombra del último botón */
+.unit.collapsed .unit-body { grid-template-rows: 0fr; opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .unit-body, .unit-chevron { transition: none; }
+}
