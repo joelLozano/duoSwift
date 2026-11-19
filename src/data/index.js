@@ -15,6 +15,10 @@ import { cleanModule3, cleanModule4 } from './clean/module2.js'
 import { cleanInterview, CLEAN_INTERVIEW_CATEGORIES } from './clean/interview.js'
 import { caLayers, caFlow, caFeature } from './clean/layers.js'
 import { cleanKotlin } from './clean/kotlin.js'
+import { pyModule1 } from './python/module1.js'
+import { pyModule2, pyModule3 } from './python/module2.js'
+import { pyModule4 } from './python/ai.js'
+import { pythonInterview, PYTHON_INTERVIEW_CATEGORIES } from './python/interview.js'
 import { algoModule1, algoModule2 } from './algo/module1.js'
 import { algoModule3 } from './algo/module2.js'
 import { algoInterview, ALGO_INTERVIEW_CATEGORIES } from './algo/interview.js'
@@ -131,6 +135,20 @@ const RAW_COURSES = [
     interview: swiftuiInterview,
     interviewCategories: SWIFTUI_INTERVIEW_CATEGORIES,
     finalExamId: 'swiftui-final',
+  },
+  {
+    id: 'python',
+    title: 'Python',
+    tagline: 'De cero a avanzado, con un módulo de IA',
+    description: 'Python 3.15 desde cero: tipos, textos, colecciones, funciones, errores y archivos; luego módulos y uv, POO, tipado, generadores, pytest, asyncio, concurrencia sin GIL y Python profesional. Cierra con IA con Python: NumPy y pandas, scikit-learn, PyTorch, LLMs, RAG y agentes, y servir tu IA con FastAPI.',
+    icon: '🐍',
+    color: '#3776AB',
+    level: 'Cero → Avanzado',
+    sourcesNote: 'Documentación oficial de Python 3.15, NumPy, pandas 3, scikit-learn, PyTorch, la API de Claude y FastAPI',
+    units: [...pyModule1, ...pyModule2, ...pyModule3, ...pyModule4],
+    interview: pythonInterview,
+    interviewCategories: PYTHON_INTERVIEW_CATEGORIES,
+    finalExamId: 'python-final',
   },
 ]
 

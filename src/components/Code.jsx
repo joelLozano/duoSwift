@@ -9,10 +9,12 @@ const KEYWORDS = new Set(
     // Kotlin
     'val fun when object companion sealed inline reified noinline crossinline out vararg suspend null this ' +
     'lateinit const abstract interface by constructor tailrec operator infix inner it ' +
-    // Python (para ejemplos de coremltools)
-    'def from with None True False elif lambda pass').split(' '),
+    // Python
+    'def from with None True False elif lambda pass except finally raise yield and or not del assert ' +
+    'global nonlocal match').split(' '),
 )
-const TOKEN = /(\/\/.*$|\/\*[\s\S]*?\*\/|"""[\s\S]*?"""|"(?:\\.|[^"\\])*"|@\w+|#\w+|\b\d[\d_.]*\b|\b[A-Za-z_]\w*\b|\$\d+|___)/gm
+// Comentarios: // y /* */ (Swift, Kotlin) y # seguido de espacio (Python). Cadenas: "…", """…""", '…' y '''…'''.
+const TOKEN = /(\/\/.*$|\/\*[\s\S]*?\*\/|#(?=[\s!]|$).*$|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|@\w+|#\w+|\b\d[\d_.]*\b|\b[A-Za-z_]\w*\b|\$\d+|___)/gm
 
 export function highlight(code) {
   const out = []
@@ -24,8 +26,8 @@ export function highlight(code) {
     const t = m[0]
     let cls
     if (t === '___') cls = 'tk-blank'
-    else if (t.startsWith('//') || t.startsWith('/*')) cls = 'tk-com'
-    else if (t.startsWith('"')) cls = 'tk-str'
+    else if (t.startsWith('//') || t.startsWith('/*') || (t[0] === '#' && (t.length === 1 || /[\s!]/.test(t[1])))) cls = 'tk-com'
+    else if (t.startsWith('"') || t.startsWith("'")) cls = 'tk-str'
     else if (t.startsWith('@') || t.startsWith('#')) cls = 'tk-attr'
     else if (/^\d/.test(t) || t.startsWith('$')) cls = 'tk-num'
     else if (KEYWORDS.has(t)) cls = 'tk-kw'

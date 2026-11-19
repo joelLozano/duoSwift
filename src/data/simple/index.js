@@ -15,6 +15,7 @@ import { kotlinCode } from './code-kotlin.js'
 import { swiftuiCode } from './code-swiftui.js'
 import { cleanCodeKotlin } from './code-clean-kotlin.js'
 import { cleanExtraSimple } from './clean-extra.js'
+import { pythonSimple } from './python.js'
 
 const TEXTS = { ...swiftSimple, ...aiSimple, ...cleanSimple, ...algoSimple, ...kotlinSimple, ...swiftuiSimple }
 const CODE = { ...swiftCode, ...aiCode, ...cleanCode, ...algoCode, ...kotlinCode, ...swiftuiCode }
@@ -37,4 +38,6 @@ export const SIMPLE = {
   ),
   // Unidades nuevas de Clean Architecture: ya traen su código en Swift y Kotlin
   ...cleanExtraSimple,
+  // Curso de Python: el código de cada ejemplo está en Python
+  ...pythonSimple,
 }
